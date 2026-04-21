@@ -1,0 +1,4 @@
+interface:
+  display_name: "debate"
+  short_description: "Adaptive-depth adversarial debate"
+  default_prompt: "Use $debate to evaluate this claim with pro, con, and critical synthesis at the depth the question deserves."
