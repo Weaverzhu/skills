@@ -1,0 +1,7 @@
+interface:
+  display_name: "Spec"
+  short_description: "Maintain repo specs that preserve user intent"
+  default_prompt: "Use $spec to record and maintain my implementation intent for this repo change."
+
+policy:
+  allow_implicit_invocation: true

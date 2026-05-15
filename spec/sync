@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+
+CODEX_SRC="${ROOT}/skills/codex/spec"
+CLAUDE_SRC="${ROOT}/skills/claude-code/spec"
+
+usage() {
+  cat <<USAGE
+Usage: ./sync <target-git-repo> [--codex-only|--claude-only]
+
+Syncs the spec skill into repo-local agent skill directories:
+  <target-git-repo>/.codex/skills/spec
+  <target-git-repo>/.claude/skills/spec
+USAGE
+}
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  usage
+  exit 0
+fi
+
+if [[ "$#" -lt 1 || "$#" -gt 2 ]]; then
+  usage >&2
+  exit 2
+fi
+
+TARGET_REPO="$1"
+INSTALL_CODEX=1
+INSTALL_CLAUDE=1
+
+case "${2:-}" in
+  "")
+    ;;
+  --codex-only)
+    INSTALL_CLAUDE=0
+    ;;
+  --claude-only)
+    INSTALL_CODEX=0
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac
+
+if [[ ! -d "${TARGET_REPO}" ]]; then
+  echo "error: target repo does not exist: ${TARGET_REPO}" >&2
+  exit 1
+fi
+
+if [[ ! -d "${TARGET_REPO}/.git" ]]; then
+  echo "error: target path is not a git repo: ${TARGET_REPO}" >&2
+  exit 1
+fi
+
+if ! command -v rsync >/dev/null 2>&1; then
+  echo "error: rsync is required to sync the skill" >&2
+  exit 1
+fi
+
+sync_skill() {
+  local src="$1"
+  local dest="$2"
+  local label="$3"
+
+  if [[ ! -d "${src}" ]]; then
+    echo "error: missing ${label} source: ${src}" >&2
+    exit 1
+  fi
+
+  mkdir -p "$(dirname -- "${dest}")"
+  rsync -a --delete \
+    --exclude ".git/" \
+    --exclude ".DS_Store" \
+    --exclude "__pycache__/" \
+    "${src}/" "${dest}/"
+  echo "synced ${label} spec skill -> ${dest}"
+}
+
+if [[ "${INSTALL_CODEX}" -eq 1 ]]; then
+  sync_skill "${CODEX_SRC}" "${TARGET_REPO}/.codex/skills/spec" "Codex"
+fi
+
+if [[ "${INSTALL_CLAUDE}" -eq 1 ]]; then
+  sync_skill "${CLAUDE_SRC}" "${TARGET_REPO}/.claude/skills/spec" "Claude Code"
+fi

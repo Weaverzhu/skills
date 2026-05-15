@@ -5,11 +5,19 @@
 Help an LLM read research papers as evidence work, not as generic summarization.
 The output should make the paper easier to understand, but it must preserve where
 claims come from, how strongly they are supported, and what remains uncertain.
+By default, a request to "review" a paper means reviewing it for the user's own
+research: understanding the field, deciding whether to trust or build on the
+work, and identifying useful ideas, assumptions, gaps, and follow-up questions.
+Do not simulate a conference reviewer unless the user explicitly asks for peer
+review, acceptance recommendation, reviewer scores, or venue-style feedback.
 
 ## Hard Constraints
 
-- Start from the user's reading intent: triage, deep understanding, implementation,
-  literature comparison, or critical review.
+- Start from the user's reading intent: triage, deep understanding,
+  implementation, standalone artifact, short blog, literature comparison, or
+  research review.
+- Treat "review" as a research-use review by default, not as a conference review.
+  Use conference-review framing only when explicitly requested.
 - Ground important statements in paper locations such as section, page, figure,
   table, theorem, algorithm, or appendix.
 - Separate author-stated claims from inferred narrative and external judgment.
@@ -17,8 +25,11 @@ claims come from, how strongly they are supported, and what remains uncertain.
   context.
 - Do not assume every paper is empirical. Theory, system, benchmark, dataset,
   position, survey, and negative-result papers need different evidence checks.
-- Keep final outputs concise, but do not compress away caveats, assumptions,
-  definitions, or failure modes.
+- Keep final outputs concise, but do not compress away the method, caveats,
+  assumptions, definitions, or failure modes.
+- When producing an HTML artifact or other standalone reading artifact, make the
+  method section self-contained and substantial enough for a reader to understand
+  how the paper works without returning to the PDF.
 
 ## First-Principles Model
 
@@ -46,8 +57,17 @@ Before detailed reading, identify the user's goal and choose depth:
 - Understanding: explain the paper's argument and technical mechanism.
 - Implementation: extract reproducible details, algorithms, settings, and missing
   information.
+- Standalone artifact: write an HTML or document-style explanation that a reader
+  can use without reading the original paper first.
+- Short blog: rewrite the paper into a compact, self-contained blog post for
+  technically literate readers who have not read the paper.
 - Literature comparison: position the paper against prior and follow-up work.
-- Review critique: evaluate novelty, correctness, evidence, clarity, and risk.
+- Research review: evaluate what the paper teaches about the field, whether its
+  claims are trustworthy, what ideas are reusable, what assumptions matter, what
+  gaps remain, and what follow-up reading or experiments would clarify it.
+- Peer review: only when explicitly requested, evaluate novelty, correctness,
+  evidence, clarity, significance, and venue-fit; include scores or acceptance
+  recommendation only if asked.
 
 If the goal is unclear and affects the output, ask one concise question.
 
@@ -131,10 +151,53 @@ Default final structure:
 2. Paper card.
 3. Core claims and evidence strength.
 4. Reconstructed story.
-5. What is solid, what is weak, and what is missing.
-6. Questions to verify before trusting or building on the paper.
+5. What is useful for the user's research, what is solid, what is weak, and what
+   is missing.
+6. Follow-up questions, papers, or experiments to verify before trusting or
+   building on the paper.
 
 Keep the response concise. Include source locations for important claims.
+
+### Standalone HTML Artifact Requirements
+
+When asked to generate an HTML artifact, article, or similar standalone
+deliverable, include the default evidence-grounded review, but do not let the
+method section become a short abstract. The method section should usually be one
+of the longest sections.
+
+The method section must cover:
+
+- the input/output contract of the method
+- the key components, modules, variables, or mathematical objects
+- the step-by-step procedure or algorithmic flow
+- training, inference, optimization, data construction, or proof flow as relevant
+- how the proposed method differs from baselines or prior work
+- assumptions and dependencies required for the method to work
+- enough implementation or reproduction detail to expose what is specified and
+  what is missing
+
+Prefer diagrams, tables, pseudocode, or numbered flows in the artifact when they
+make the method easier to understand. Preserve source locations for important
+method claims.
+
+### Short Blog Rewrite
+
+When the user asks for a blog, short blog, explainer, or public-facing rewrite,
+produce a compact post that can stand alone for readers who have not read the
+paper.
+
+The blog should:
+
+- start from the problem and why it matters, not from paper metadata
+- define necessary terms before using them
+- explain the core idea and method in plain language with a concrete example or
+  analogy when useful
+- summarize the main evidence and what it does or does not prove
+- explain why the result matters, who should care, and where it may fail
+- avoid unexplained acronyms, dangling references to section numbers, and claims
+  that require reading the paper first
+
+Keep the blog short, but not so compressed that the method becomes opaque.
 
 ## Edge Cases
 

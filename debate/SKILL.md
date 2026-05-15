@@ -61,11 +61,13 @@ Task:
 - State key assumptions and the most serious weakness in your case.
 - Do not strawman the opposing side or omit known contradictory evidence.
 - Match the requested depth: concise when asked, but detailed enough that evidence quality, assumptions, and uncertainty are visible.
+- List citations/sources for any factual claims you verified or relied on; if no external sources were needed, say so.
 
 Output:
 - Position
 - Strongest arguments
 - Evidence and checks
+- Citations/sources
 - Assumptions
 - Weakest point
 ```
@@ -85,11 +87,13 @@ Task:
 - State key assumptions and the most serious weakness in your case.
 - Do not strawman the supporting side or omit known supporting evidence.
 - Match the requested depth: concise when asked, but detailed enough that evidence quality, assumptions, and uncertainty are visible.
+- List citations/sources for any factual claims you verified or relied on; if no external sources were needed, say so.
 
 Output:
 - Position
 - Strongest arguments
 - Evidence and checks
+- Citations/sources
 - Assumptions
 - Weakest point
 ```
