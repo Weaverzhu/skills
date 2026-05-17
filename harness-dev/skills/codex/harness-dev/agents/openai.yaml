@@ -1,0 +1,7 @@
+interface:
+  display_name: "Harness Dev"
+  short_description: "Improve agent harnesses from raw traces"
+  default_prompt: "Use $harness-dev to inspect raw trajectories and iterate on this agent harness."
+
+policy:
+  allow_implicit_invocation: true

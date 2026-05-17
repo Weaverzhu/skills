@@ -1,12 +1,32 @@
 ---
 name: paper-reading
-description: Use this skill to read, summarize, review, critique, rewrite, or extract implementation details from research papers with evidence-grounded claims, source locations, and uncertainty controls. Trigger for requests involving paper triage, deep paper understanding, claim/evidence audits, literature comparison, reproducibility checks, research-use review, standalone HTML artifacts, or short blog rewrites. Do not treat "review" as conference peer review unless explicitly requested.
+description: Use this skill only when generating a paper-reading artifact such as an HTML report, Markdown report, article, blog/explainer, structured reading artifact, literature-comparison report, claim/evidence audit, reproducibility report, or implementation-notes document. Do not trigger it for general Q&A about papers, chat-style explanations, isolated factual questions, or quick paper lookup/clarification.
 ---
 
 # Paper Reading
 
-Use this skill to treat a research paper as an argument with evidence, not as text
-to summarize generically.
+Use this skill to produce a durable paper-reading artifact, not to answer
+general paper questions. The artifact should treat a research paper as an
+argument with evidence, not as text to summarize generically.
+The finished artifact should be a shorter, clearer version of the paper that a
+technically appropriate reader can understand without reading the original paper
+first. Do not make the artifact feel like notes taken after reading the paper.
+
+## Scope Boundary
+
+Use this skill only when the user asks for an artifact or deliverable, such as:
+
+- HTML or Markdown reading report
+- article, blog post, explainer, or standalone rewrite
+- structured reading artifact or explanation
+- claim/evidence audit
+- literature-comparison report
+- reproducibility or implementation-notes document
+
+Do not use this skill for ordinary paper Q&A, quick summaries, chat-style
+explanations, isolated factual questions, paper lookup, citation lookup, or
+brief clarification. For those requests, answer normally without applying this
+artifact workflow.
 
 By default, a request to "review" a paper means reviewing it for the user's own
 research: understanding the field, deciding whether to trust or build on the
@@ -17,8 +37,8 @@ review, acceptance recommendation, reviewer scores, or venue-style feedback.
 ## Hard Constraints
 
 - Start from the user's reading intent: triage, deep understanding,
-  implementation, standalone artifact, short blog, literature comparison, or
-  research review.
+  implementation notes, standalone artifact, short blog, literature comparison,
+  reproducibility report, or research review artifact.
 - Treat "review" as a research-use review by default, not as a conference review.
   Use conference-review framing only when explicitly requested.
 - Ground important statements in source locations: section, page, figure, table,
@@ -28,16 +48,21 @@ review, acceptance recommendation, reviewer scores, or venue-style feedback.
 - Do not assume every paper is empirical. Adapt evidence checks to paper type.
 - Keep outputs concise, but preserve the method, caveats, assumptions,
   definitions, and failure modes.
+- Write for readers who have not read the paper. The artifact must carry the
+  paper's problem, method, claims, evidence, limitations, and practical meaning
+  as a coherent shorter substitute, not as disconnected reading notes.
 - When producing an HTML artifact or other standalone reading artifact, make the
   method section self-contained and substantial enough for a reader to understand
   how the paper works without returning to the PDF.
 
 ## Workflow
 
-1. **Establish intent.** Identify whether the user wants triage, understanding,
-   implementation, standalone artifact, short blog, comparison, or research
-   review. Ask one concise question only when the intent materially changes the
-   work. Interpret an unqualified "review" as research review, not peer review.
+1. **Confirm artifact intent.** Identify the requested artifact type: HTML or
+   Markdown report, structured artifact, article/blog, comparison report, claim
+   audit, reproducibility report, implementation notes, or research review
+   artifact.
+   If the user only asks a general question about a paper, do not use this
+   workflow.
 2. **Build a paper card.** Capture paper type, problem, motivation, claimed
    contributions, central method, key figures/tables/theorems/algorithms, why it
    matters, and one reason to be cautious.
@@ -53,16 +78,19 @@ review, acceptance recommendation, reviewer scores, or venue-style feedback.
 6. **Audit evidence.** Check whether experiments, proofs, derivations, ablations,
    benchmarks, datasets, examples, or qualitative analysis support the core
    claims.
-7. **Answer with checks.** Default to bottom line, paper card, core claims and
-   evidence strength, reconstructed story, usefulness for the user's research,
-   solid/weak/missing points, and verification questions.
+7. **Write the artifact with checks.** Default to bottom line, paper card, core
+   claims and evidence strength, reconstructed story, usefulness for the user's
+   research, solid/weak/missing points, and verification questions. Write it as
+   a compact version of the paper's argument, not as reading notes, unless the
+   user explicitly asks for notes.
 
 ## Standalone Artifacts
 
 When asked to generate an HTML artifact, article, or similar standalone
 deliverable, include the default evidence-grounded review, but do not let the
 method section become a short abstract. The method section should usually be one
-of the longest sections.
+of the longest sections. A reader should come away understanding how the paper
+works and why its claims are or are not justified without returning to the PDF.
 
 The method section must cover:
 
@@ -127,11 +155,11 @@ skipped steps, examples, and whether the result applies beyond narrow regimes.
 For systems, dataset, benchmark, survey, or position papers, state the evaluation
 criteria first, then audit against those criteria.
 
-## Output Rules
+## Artifact Output Rules
 
 - Label unsupported statements as inference or unsupported.
 - If only a title or abstract is available, label the output as abstract-only.
-- If the user asks for a short summary, still include the central caveat and
+- If the user asks for a brief artifact, still include the central caveat and
   evidence strength.
 - If the paper's claim is not supported by its evidence, say so directly.
 - Prefer concise conclusions, assumptions, and checks over long hidden reasoning.

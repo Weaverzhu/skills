@@ -2,9 +2,22 @@
 
 ## Goal
 
-Help an LLM read research papers as evidence work, not as generic summarization.
-The output should make the paper easier to understand, but it must preserve where
-claims come from, how strongly they are supported, and what remains uncertain.
+Help an LLM generate durable paper-reading artifacts as evidence work, not as
+generic summarization or general paper Q&A. The output should make the paper
+easier to understand, but it must preserve where claims come from, how strongly
+they are supported, and what remains uncertain.
+The artifact should be self-contained enough that a technically appropriate
+reader understands the paper after reading the artifact without needing to read
+the original paper first. Treat the artifact as a shorter, clearer version of
+the paper with evidence and caveats preserved, not as notes taken after reading
+the paper.
+This workflow is scoped to artifacts such as HTML reports, Markdown reports,
+articles, blog/explainers, structured reading artifacts, claim/evidence audits,
+literature-comparison reports, reproducibility reports, and implementation-notes
+documents.
+Do not use this skill for ordinary paper Q&A, chat-style explanations, isolated
+factual questions, quick summaries, paper lookup, citation lookup, or brief
+clarification.
 By default, a request to "review" a paper means reviewing it for the user's own
 research: understanding the field, deciding whether to trust or build on the
 work, and identifying useful ideas, assumptions, gaps, and follow-up questions.
@@ -13,9 +26,12 @@ review, acceptance recommendation, reviewer scores, or venue-style feedback.
 
 ## Hard Constraints
 
+- Only invoke this workflow when the user wants a paper-reading artifact or
+  deliverable. For general Q&A on papers, answer normally without applying this
+  workflow.
 - Start from the user's reading intent: triage, deep understanding,
-  implementation, standalone artifact, short blog, literature comparison, or
-  research review.
+  implementation notes, standalone artifact, short blog, literature comparison,
+  reproducibility report, or research review artifact.
 - Treat "review" as a research-use review by default, not as a conference review.
   Use conference-review framing only when explicitly requested.
 - Ground important statements in paper locations such as section, page, figure,
@@ -27,6 +43,9 @@ review, acceptance recommendation, reviewer scores, or venue-style feedback.
   position, survey, and negative-result papers need different evidence checks.
 - Keep final outputs concise, but do not compress away the method, caveats,
   assumptions, definitions, or failure modes.
+- Write artifacts for readers who have not read the paper. The artifact must
+  carry the paper's problem, method, claims, evidence, limitations, and practical
+  meaning as a coherent shorter substitute, not as a checklist of reading notes.
 - When producing an HTML artifact or other standalone reading artifact, make the
   method section self-contained and substantial enough for a reader to understand
   how the paper works without returning to the PDF.
@@ -51,14 +70,18 @@ The workflow should build from these objects rather than from summary style.
 
 ### 1. Establish Reading Intent
 
-Before detailed reading, identify the user's goal and choose depth:
+Before detailed reading, confirm that the user wants an artifact and choose
+depth. If the user only asks a general question about a paper, do not use this
+workflow.
+
+Artifact goals include:
 
 - Triage: decide whether the paper is worth reading.
 - Understanding: explain the paper's argument and technical mechanism.
-- Implementation: extract reproducible details, algorithms, settings, and missing
-  information.
-- Standalone artifact: write an HTML or document-style explanation that a reader
-  can use without reading the original paper first.
+- Implementation notes: extract reproducible details, algorithms, settings, and
+  missing information.
+- Standalone artifact: write an HTML or Markdown explanation that a reader
+  can use to understand the paper without reading the original paper first.
 - Short blog: rewrite the paper into a compact, self-contained blog post for
   technically literate readers who have not read the paper.
 - Literature comparison: position the paper against prior and follow-up work.
@@ -143,9 +166,9 @@ For theory papers, check:
 For systems, dataset, benchmark, survey, or position papers, adapt the audit to
 the paper type and state the criteria used.
 
-### 7. Final Output
+### 7. Final Artifact
 
-Default final structure:
+Default artifact structure:
 
 1. Bottom line.
 2. Paper card.
@@ -156,14 +179,19 @@ Default final structure:
 6. Follow-up questions, papers, or experiments to verify before trusting or
    building on the paper.
 
-Keep the response concise. Include source locations for important claims.
+Write the final artifact as a compact version of the paper's argument: introduce
+the problem, define needed concepts, explain the method, connect claims to
+evidence, and surface limitations in a coherent narrative. Do not output a set
+of disconnected reading notes unless the user explicitly asks for notes. Keep
+the response concise. Include source locations for important claims.
 
 ### Standalone HTML Artifact Requirements
 
 When asked to generate an HTML artifact, article, or similar standalone
 deliverable, include the default evidence-grounded review, but do not let the
 method section become a short abstract. The method section should usually be one
-of the longest sections.
+of the longest sections. A reader should come away understanding how the paper
+works and why its claims are or are not justified without returning to the PDF.
 
 The method section must cover:
 
@@ -203,8 +231,8 @@ Keep the blog short, but not so compressed that the method becomes opaque.
 
 - If only a title or abstract is available, label the result as abstract-only and
   avoid claims about experiments or proofs not present in the text.
-- If the user asks for a very short summary, still preserve the main caveat and
-  the evidence strength of the central claim.
+- If the user asks for a brief artifact, still preserve the main caveat and the
+  evidence strength of the central claim.
 - If the paper's core claim is unsupported by its experiments, say so directly.
 - If the paper is outside the model's current knowledge, rely on the provided
   text or verified sources rather than memory.
