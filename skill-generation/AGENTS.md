@@ -6,4 +6,4 @@ The folder name should be the name of this skill and be related to the topic of 
 
 If there is already an existing skill, ask the user to decide.
 
-Also provide a sync script to install this skill global for claude-code and codex.
+Also provide a sync script `./sync.sh` to install this skill global for claude-code and codex

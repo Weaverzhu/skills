@@ -1,0 +1,5 @@
+interface:
+  display_name: "intermediate-output"
+  short_description: "Expose small module outputs for focused debugging"
+  default_prompt: "Use $intermediate-output to add a lightweight checkpoint that shows the output of one module before running the full system."
+  allow_implicit_invocation: false
