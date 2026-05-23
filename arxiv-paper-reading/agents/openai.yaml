@@ -1,0 +1,7 @@
+interface:
+  display_name: "arXiv Paper Reading"
+  short_description: "Read arXiv papers from local TeX source"
+  default_prompt: "Use $arxiv-paper-reading to read this arXiv paper from local TeX source and produce an evidence-grounded summary."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Codex Day Review"
+  short_description: "Daily Codex CLI usage report"
+  default_prompt: "Use $codex-day-review to generate an HTML review of my Codex CLI sessions for today."
